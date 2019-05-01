@@ -1,5 +1,6 @@
 import {Router, Request, Response, NextFunction} from "express";
 import SMP from "../controllers/SMP";
+import * as request from 'request'
 import SMPfactory from "../controllers/SMPFactory";
 import {Promise} from "es6-promise";
 
@@ -197,6 +198,32 @@ export class RequestHandler {
         res.send(err);
       });
   };
+
+
+  public handleWikipedia = (req : Request , res :Response) => {
+  
+    var Search = req.body.query;
+    var url = 'https://en.wikipedia.org/api/rest_v1/page/summary/'+Search;
+    
+            request(url, function (error, response, body) {
+             
+          if (!error && response.statusCode == 200) {
+               var obj = JSON.parse(body)
+               
+               res.send(obj.extract)
+             
+           }
+           else 
+           {
+               console.log("error")
+               res.send("error");
+           }
+      })
+ };
+
+
+
+
 
   public handleSocialSearchRequest = (req: Request, res: Response) => {
     // Array of results
